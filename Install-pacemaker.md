@@ -181,7 +181,7 @@ pcs constraint
 ## 3. Kiểm tra trạng thái dịch vụ
 - haproxy: http://192.168.20.20:8080/stats
 - pacemaker: https://192.168.20.20:2224/login
-- Truy cập Mariadb qua IP VIP: 
+- Truy cập MariaDB qua IP VIP: 
 ```sh
 mysql -h 192.168.20.20 -u root
 ```
