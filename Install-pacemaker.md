@@ -1,12 +1,150 @@
-# Install-pacemaker
+## Mô hình Lab
 
-Mô hình Lab
 |Server|controller1|controller2|controller3|
 |------|-----------|-----------|-----------|
 |eth1|192.168.20.11|192.168.20.12|192.168.20.13|
 |eth3|192.168.40.11|192.168.40.12|192.168.40.13|
 
 IP VIP: 192.168.20.20
+
+## 1. Cài đặt MariaDB
+
+Thực hiện trên tất cả các node
+
+Khai báo repo
+```sh
+echo '[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.2/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1' >> /etc/yum.repos.d/MariaDB.repo
+yum update -y
+```
+Cài đặt MariaDB và các gói hỗ trợ
+```sh
+yum install mariadb-server -y
+yum install -y galera rsync
+```
+Tắt MariaDB
+```sh
+systemctl stop mariadb
+```
+***Lưu ý: Không khởi động dịch vụ mariadb sau khi cài (Liên quan tới cấu hình Galera Mariadb)***
+## Cấu hình Galera Cluster
+**Thực hiện trên Node controller1**
+```sh
+cp /etc/my.cnf.d/server.cnf /etc/my.cnf.d/server.cnf.bak
+
+echo '[server]
+[mysqld]
+bind-address=192.168.20.11
+
+[galera]
+wsrep_on=ON
+wsrep_provider=/usr/lib64/galera/libgalera_smm.so
+#add your node ips here
+wsrep_cluster_address="gcomm://192.168.40.11,192.168.40.12,192.168.40.13"
+binlog_format=row
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+#Cluster name
+wsrep_cluster_name="portal_cluster"
+# Allow server to accept connections on all interfaces.
+bind-address=192.168.20.11
+# this server ip, change for each server
+wsrep_node_address="192.168.40.11"
+# this server name, change for each server
+wsrep_node_name="controller1"
+wsrep_sst_method=rsync
+[embedded]
+[mariadb]
+[mariadb-10.2]' > /etc/my.cnf.d/server.cnf
+```
+**Thực hiện trên Node controller2**
+```sh
+cp /etc/my.cnf.d/server.cnf /etc/my.cnf.d/server.cnf.bak
+
+echo '[server]
+[mysqld]
+bind-address=192.168.20.12
+
+[galera]
+wsrep_on=ON
+wsrep_provider=/usr/lib64/galera/libgalera_smm.so
+#add your node ips here
+wsrep_cluster_address="gcomm://192.168.40.11,192.168.40.12,192.168.40.13"
+binlog_format=row
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+#Cluster name
+wsrep_cluster_name="portal_cluster"
+# Allow server to accept connections on all interfaces.
+bind-address=192.168.20.12
+# this server ip, change for each server
+wsrep_node_address="192.168.40.12"
+# this server name, change for each server
+wsrep_node_name="controller2"
+wsrep_sst_method=rsync
+[embedded]
+[mariadb]
+[mariadb-10.2]' > /etc/my.cnf.d/server.cnf
+```
+**Thực hiện trên Node controller3**
+```sh
+cp /etc/my.cnf.d/server.cnf /etc/my.cnf.d/server.cnf.bak
+
+echo '[server]
+[mysqld]
+bind-address=192.168.20.13
+
+[galera]
+wsrep_on=ON
+wsrep_provider=/usr/lib64/galera/libgalera_smm.so
+#add your node ips here
+wsrep_cluster_address="gcomm://192.168.40.11,192.168.40.12,192.168.40.13"
+binlog_format=row
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+#Cluster name
+wsrep_cluster_name="portal_cluster"
+# Allow server to accept connections on all interfaces.
+bind-address=192.168.20.13
+# this server ip, change for each server
+wsrep_node_address="192.168.40.13"
+# this server name, change for each server
+wsrep_node_name="controller3"
+wsrep_sst_method=rsync
+[embedded]
+[mariadb]
+[mariadb-10.2]' > /etc/my.cnf.d/server.cnf
+```
+**Thực hiên trên Node controller1**
+```sh
+galera_new_cluster
+systemctl start mariadb
+systemctl enable mariadb
+```
+**Thực hiện trên 2 Node còn lại**
+```sh
+systemctl start mariadb
+systemctl enable mariadb
+```
+Kiểm tra trạng thái Cluster
+```sh
+mysql -u root -p -e "SHOW STATUS LIKE 'wsrep_cluster_size'"
+```
+Tạo User phục vụ HAProxy
+```sh
+mysql -u root -p
+CREATE USER 'haproxy'@'controller1';
+CREATE USER 'haproxy'@'controller2';
+CREATE USER 'haproxy'@'controller3';
+CREATE USER 'haproxy'@'%';
+exit;
+```
+## 2. Install-pacemaker
+
+
 
 ## Cài đặt HAProxy
 
@@ -188,3 +326,5 @@ mysql -h 192.168.20.20 -u root
 ## 4. Tài liệu tham khảo: 
 - https://blog.cloud365.vn/linux/pacemaker-haproxy-galera/
 - https://github.com/hocchudong/ghichep-pacemaker-corosync
+- https://blog.cloud365.vn/linux/cai-dat-galera-mariadb/
+- https://alvinalexander.com/blog/post/mysql/show-users-i-ve-created-in-mysql-database
