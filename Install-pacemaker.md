@@ -125,7 +125,7 @@ Khởi tạo cấu hình cluster ban đầu
 ```sh
 pcs cluster setup --name ha_cluster controller1 controller2 controller3
 ```
-***Lưu ý: controller1, controller2, controller3: Hostname các node thuộc cluster, yêu cầu khai báo trong `/etc/hosts`
+***Lưu ý: controller1, controller2, controller3: Hostname các node thuộc cluster, yêu cầu khai báo trong `/etc/hosts`***
 
 Khởi động Cluster và cho phép start cùng hệ thống
 ```sh
