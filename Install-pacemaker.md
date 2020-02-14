@@ -104,6 +104,7 @@ CREATE USER 'haproxy'@'controller3';
 CREATE USER 'haproxy'@'%';
 ```
 ## Cài đặt pacemaker corosync
+
 Cài đặt pacemaker, start và enable pacemaker
 ```sh
 yum -y install pacemaker pcs
