@@ -142,11 +142,7 @@ CREATE USER 'haproxy'@'controller3';
 CREATE USER 'haproxy'@'%';
 exit;
 ```
-## 2. Install-pacemaker
-
-
-
-## Cài đặt HAProxy
+## 2. Cài đặt HAProxy
 
 **Thực hiện trên tất cả các Node:**
 ```sh
@@ -241,7 +237,7 @@ CREATE USER 'haproxy'@'controller2';
 CREATE USER 'haproxy'@'controller3';
 CREATE USER 'haproxy'@'%';
 ```
-## Cài đặt pacemaker corosync
+## 2. Cài đặt Pacemaker corosync
 
 Cài đặt pacemaker, start và enable pacemaker
 ```sh
