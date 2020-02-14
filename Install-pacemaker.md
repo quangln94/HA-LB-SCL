@@ -1,6 +1,11 @@
 # Install-pacemaker
 
-Moo mình Lab
+Mô hình Lab
+|Server|controller1|controller2|controller3|
+|------|-----------|-----------|-----------|
+|eth1|192.168.20.11|192.168.20.12|192.168.20.13|
+|eth3|192.168.40.11|192.168.40.12|192.168.40.13|
+
 ## Cài đặt HAProxy
 
 **Thực hiện trên tất cả các Node:**
