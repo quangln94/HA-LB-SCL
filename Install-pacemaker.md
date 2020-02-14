@@ -237,7 +237,7 @@ CREATE USER 'haproxy'@'controller2';
 CREATE USER 'haproxy'@'controller3';
 CREATE USER 'haproxy'@'%';
 ```
-## 2. Cài đặt Pacemaker corosync
+## 3. Cài đặt Pacemaker corosync
 
 Cài đặt pacemaker, start và enable pacemaker
 ```sh
@@ -312,14 +312,14 @@ Kiểm tra ràng buộc trên resource
 ```sh
 pcs constraint
 ```
-## 3. Kiểm tra trạng thái dịch vụ
+## 4. Kiểm tra trạng thái dịch vụ
 - haproxy: http://192.168.20.20:8080/stats
 - pacemaker: https://192.168.20.20:2224/login
 - Truy cập MariaDB qua IP VIP: 
 ```sh
 mysql -h 192.168.20.20 -u root
 ```
-## 4. Tài liệu tham khảo: 
+## Tài liệu tham khảo: 
 - https://blog.cloud365.vn/linux/pacemaker-haproxy-galera/
 - https://github.com/hocchudong/ghichep-pacemaker-corosync
 - https://blog.cloud365.vn/linux/cai-dat-galera-mariadb/
