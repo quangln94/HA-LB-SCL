@@ -1,1 +1,1 @@
-# High Available - Load Balacing - Scalabalyti
+# High Available - Load Balacing - Scalabality
