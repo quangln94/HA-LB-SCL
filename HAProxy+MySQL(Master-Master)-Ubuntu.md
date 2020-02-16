@@ -30,7 +30,64 @@ Thử query lên 1 trong các Node từ user haproxy_root.
 
 mysql -h 192.168.40.1 -u haproxy_root -p -e "SHOW DATABASES"
 
+## Cài đặt HAProxy
+
+apt-get install haproxy
+
+Enable HAPrpxy bằng init script.
+
+sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/haproxy
+
+Kiểm tra bằng lệnh sau
+
+service haproxy
+Usage: /etc/init.d/haproxy {start|stop|reload|restart|status}
+Configuring HAProxy
+
+Backup cấu hình
+mv /etc/haproxy/haproxy.cfg{,.original}
+
+Tạo file config với nội dung sau:
+
+cat << EOF > /etc/haproxy/haproxy.cfg
+
+#The first block is the global and defaults configuration block.
+global
+    log 127.0.0.1 local0 notice
+    user haproxy
+    group haproxy
+
+defaults
+    log global
+    retries 2
+    timeout connect 3000
+    timeout server 5000
+    timeout client 5000
+listen mysql-cluster
+    bind 127.0.0.1:3306
+    mode tcp
+    option mysql-check user haproxy_check
+    balance roundrobin
+    server mysql-1 192.168.40.1:3306 check
+    server mysql-2 192.168.40.2:3306 check
+listen 0.0.0.0:8080
+    mode http
+    stats enable
+    stats uri /
+    stats realm Strictly\ Private
+    stats auth haproxy1:haproxy1
+    stats auth hâproxy2:haproxy2
+
+
+Start HAProxy
+
+service haproxy start
 
 ## 3, Kiểm tra
+
+Sử dụng MySQL client để query HAProxy.
+
+mysql -h 127.0.0.1 -u haproxy_root -p -e "SHOW DATABASES"
+
 # Tài liệu tham khảo
 - digitalocean.com/community/tutorials/how-to-use-haproxy-to-set-up-mysql-load-balancing--3
