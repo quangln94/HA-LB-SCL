@@ -90,4 +90,6 @@ Sử dụng MySQL client để query HAProxy.
 mysql -h 127.0.0.1 -u haproxy_root -p -e "SHOW DATABASES"
 
 # Tài liệu tham khảo
-- digitalocean.com/community/tutorials/how-to-use-haproxy-to-set-up-mysql-load-balancing--3
+- https://www.digitalocean.com/community/tutorials/how-to-use-haproxy-to-set-up-mysql-load-balancing--3
+- https://towardsdatascience.com/high-availability-mysql-cluster-with-load-balancing-using-haproxy-and-heartbeat-40a16e134691
+- https://viblo.asia/p/xay-dung-high-available-cho-mysql-server-voi-haproxy-va-keepalived-tren-ubuntu-naQZRg6Xlvx
