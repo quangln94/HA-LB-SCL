@@ -29,22 +29,23 @@ Thử query lên 1 trong các Node từ user haproxy_root.
 mysql -h 192.168.40.1 -u haproxy_root -p -e "SHOW DATABASES"
 ```
 ## Cài đặt HAProxy
-
+```sh
 apt-get install haproxy
-
+```
 Enable HAPrpxy bằng init script.
-
+```sh
 sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/haproxy
-
+```
 Kiểm tra bằng lệnh sau
-
+```sh
 service haproxy
 Usage: /etc/init.d/haproxy {start|stop|reload|restart|status}
 Configuring HAProxy
-
+```
 Backup cấu hình
+```sh
 mv /etc/haproxy/haproxy.cfg{,.original}
-
+```
 Tạo file config với nội dung sau:
 
 cat << EOF > /etc/haproxy/haproxy.cfg
